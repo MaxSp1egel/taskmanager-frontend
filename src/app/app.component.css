@@ -1,0 +1,28 @@
+.title {
+    text-align: center; 
+    width: 100%;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.mat-grid-list {
+    margin: 16px;
+}
+
+.mat-grid-tile {
+    box-shadow: 1px 1px 5px grey;
+}
+
+.mat-grid-tile .mat-grid-tile-header {
+    background-color: white; 
+    color: black; 
+    font-weight: bold;
+}
+
+.mat-grid-tile .mat-selection-list {
+    width: 100%; 
+    position: absolute; 
+    top: 40px;
+}

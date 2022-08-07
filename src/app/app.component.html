@@ -1,1 +1,21 @@
-Hello World!
+<mat-toolbar color="primary">
+    <span class="title">Задачи</span>
+    <span class="spacer"></span>
+    <button mat-icon-button color="black" (click)="openDialog()">
+        <mat-icon>add</mat-icon>
+    </button>
+</mat-toolbar>
+
+<mat-grid-list cols="3" rowHeight="200px" gutterSize="20">
+    <mat-grid-tile *ngFor="let category of data" [rowspan]="fit(category.todos.length)">
+        <mat-grid-tile-header>
+            {{ category.title }}
+        </mat-grid-tile-header>
+        <mat-selection-list>
+            <mat-list-option *ngFor="let todo of category.todos; let last = last" [selected]="todo.isCompleted" checkboxPosition="before" (click)="check(todo)">
+                {{ todo.text }}
+                <mat-divider *ngIf="!last"></mat-divider>
+            </mat-list-option>
+        </mat-selection-list>
+    </mat-grid-tile>
+</mat-grid-list>

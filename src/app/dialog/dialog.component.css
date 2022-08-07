@@ -1,0 +1,24 @@
+h1 {
+    text-align: center;
+}
+
+.mat-dialog-content {
+    overflow: unset;
+    padding: 0 8px;
+}
+
+.mat-list-item {
+    height: auto;
+}
+
+.mat-form-field {
+    width: 400px;
+}
+
+.mat-dialog-actions button {
+    width: 48%;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
