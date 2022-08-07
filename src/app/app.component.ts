@@ -1,89 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { DialogComponent } from './dialog/dialog.component';
-import { Apollo, gql, QueryRef } from 'apollo-angular';
+import { DialogComponent } from './components/dialog/dialog.component';
+import { QueryRef } from 'apollo-angular';
 import { plainToClass } from 'class-transformer';
-import { Subscription } from 'rxjs';
-import { Category } from './category';
-import { Todo } from './todo';
-
-const GET_CATEGORIES = gql`
-  query getCategories {
-    categories {
-      id
-      title
-      todos {
-        id
-        text
-        isCompleted
-      }
-    }
-  }
-`;
-
-export class GetCategoriesResponse {
-  private _categories!: Category[];
-
-  public get categories(): Category[] {
-    return this._categories;
-  }
-
-  public set categories(value: Category[]) {
-    this._categories = value;
-  }
-}
-
-const CREATE_TODO = gql`
-  mutation createTodo($input: CreateTodoArgs!) {
-    createTodo(input: $input) {
-      category {
-        id
-        title
-      }
-      id
-      text
-      isCompleted
-    }
-  }
-`;
-
-export class CreateTodoResponse {
-  private _createTodo!: Todo;
-
-  public get createTodo(): Todo {
-    return this._createTodo;
-  }
-
-  public set createTodo(value: Todo) {
-    this._createTodo = value;
-  }
-}
-
-const CHECK_TODO = gql`
-  mutation checkTodo($input: CheckTodoArgs!) {
-    checkTodo(input: $input) {
-      category {
-        id
-        title
-      }
-      id
-      text
-      isCompleted
-    }
-  }
-`;
-
-export class CheckTodoResponse {
-  private _checkTodo!: Todo;
-
-  public get checkTodo(): Todo {
-    return this._checkTodo;
-  }
-
-  public set checkTodo(value: Todo) {
-    this._checkTodo = value;
-  }
-}
+import { map, Subscription } from 'rxjs';
+import { Category } from './models/category';
+import { Todo } from './models/todo';
+import { CheckTodo, CheckTodoResponse, CreateTodo, CreateTodoResponse, GetCategories, GetCategoriesResponse } from './services/graphql.service';
 
 @Component({
   selector: 'app-root',
@@ -99,27 +22,21 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialog: MatDialog,
-    private apollo: Apollo
+    private getCategories: GetCategories,
+    private createTodo: CreateTodo,
+    private checkTodo: CheckTodo
   ) {}
 
   ngOnInit(): void {
-    this.categoriesQuery = this.apollo.watchQuery<any>({
-      query: GET_CATEGORIES
-    });
-    this.querySubscription = this.categoriesQuery.valueChanges.subscribe(({ data }) => {
-      try {
-        let responseData: GetCategoriesResponse = plainToClass(GetCategoriesResponse, data);
-        if (responseData && responseData.categories) {
-          this.data = responseData.categories;
-        }
-        else {
-          throw new Error('Не удалось получить данные с сервера');
-        }
-      }
-      catch (error) {
-        console.log(error);
-      }
-    });
+    this.categoriesQuery = this.getCategories.watch();
+    this.querySubscription = this.categoriesQuery.valueChanges
+      .pipe(
+        map(response => plainToClass(GetCategoriesResponse, response.data)),
+        map(data => data.categories) 
+      )
+      .subscribe(categories => {
+        this.data = categories;
+      });
   }
 
   ngOnDestroy(): void {
@@ -146,52 +63,30 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   create(categoryName: string, text: string): void {
-    this.apollo.mutate({
-      mutation: CREATE_TODO,
-      variables: {
-        input: {
-          categoryName: categoryName,
-          text: text
-        }
+    this.createTodo.mutate({
+      input: {
+        categoryName: categoryName,
+        text: text
       }
-    }).subscribe(({ data }) => {
-      try {
-        let responseData: CreateTodoResponse = plainToClass(CreateTodoResponse, data);
-        if (responseData && responseData.createTodo) {
-          this.categoriesQuery?.refetch();
-        } 
-        else {
-          throw new Error('Не удалось получить данные с сервера');
-        }
-      }
-      catch (error) {
-        console.log(error);
-      }
+    }).pipe(
+      map(response => plainToClass(CreateTodoResponse, response.data)),
+      map(data => data.createTodo)
+    ).subscribe(data => {
+      this.categoriesQuery?.refetch();
     });
   }
 
   check(todo: Todo): void {
-    this.apollo.mutate({
-      mutation: CHECK_TODO,
-      variables: {
-        input: {
-          id: todo.id,
-          status: !todo.isCompleted
-        }
+    this.checkTodo.mutate({
+      input: {
+        id: todo.id,
+        status: !todo.isCompleted
       }
-    }).subscribe(({ data }) => {
-      try {
-        let responseData: CheckTodoResponse = plainToClass(CheckTodoResponse, data);
-        if (responseData && responseData.checkTodo) {
-          this.categoriesQuery?.refetch();
-        } 
-        else {
-          throw new Error('Не удалось получить данные с сервера');
-        }
-      }
-      catch (error) {
-        console.log(error);
-      }
+    }).pipe(
+      map(response => plainToClass(CheckTodoResponse, response.data)),
+      map(data => data.checkTodo)
+    ).subscribe(data => {
+      this.categoriesQuery?.refetch();
     });
   }
 
