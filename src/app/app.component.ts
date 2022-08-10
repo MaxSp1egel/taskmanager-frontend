@@ -93,4 +93,8 @@ export class AppComponent implements OnInit, OnDestroy {
   fit(size: number): number {
     return Math.floor(size / 4) + 1;
   }
+
+  trackByFn(index: number, item: Category | Todo): number {
+    return item.id;
+  }
 }
