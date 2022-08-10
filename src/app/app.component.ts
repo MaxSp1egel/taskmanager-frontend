@@ -71,8 +71,16 @@ export class AppComponent implements OnInit, OnDestroy {
     }).pipe(
       map(response => plainToClass(CreateTodoResponse, response.data)),
       map(data => data.createTodo)
-    ).subscribe(data => {
-      this.categoriesQuery?.refetch();
+    ).subscribe(todo => {
+      let categoryIndex = this.data.findIndex((category: Category) => category.id === todo.category.id);
+      if (categoryIndex >= 0) {
+        this.data[categoryIndex].todos.push(todo);
+      }
+      else {
+        let category = todo.category;
+        category.todos = [todo];
+        this.data.push(category);
+      }
     });
   }
 
@@ -85,8 +93,10 @@ export class AppComponent implements OnInit, OnDestroy {
     }).pipe(
       map(response => plainToClass(CheckTodoResponse, response.data)),
       map(data => data.checkTodo)
-    ).subscribe(data => {
-      this.categoriesQuery?.refetch();
+    ).subscribe(todo => {
+      let categoryIndex = this.data.findIndex((category: Category) => category.id === todo.category.id);
+      let todoIndex = this.data[categoryIndex].todos.findIndex((_todo: Todo) => _todo.id === todo.id);
+      this.data[categoryIndex].todos.splice(todoIndex, 1, todo);
     });
   }
 
