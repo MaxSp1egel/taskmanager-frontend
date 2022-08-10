@@ -14,7 +14,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>Название категории</mat-label>
                 <mat-select formControlName="categoryName">
-                    <mat-option *ngFor="let category of categories" [value]="category">
+                    <mat-option *ngFor="let category of categories; trackBy: trackByFn" [value]="category">
                         {{ category }}
                     </mat-option>
                 </mat-select>

@@ -34,4 +34,8 @@ export class DialogComponent {
   customCategoryNameValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     return this.form && this.form.value.categoryName === 'Создать категорию' ? Validators.required(control) : null;
   };
+
+  trackByFn(index: number, item: string): number {
+    return index;
+  }
 }
