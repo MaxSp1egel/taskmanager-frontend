@@ -1,3 +1,4 @@
+import { Expose, Type } from "class-transformer";
 import { Category } from "./category";
 
 export class Todo {
@@ -6,6 +7,8 @@ export class Todo {
     private _text!: string;
     private _isCompleted!: boolean;
 
+    @Expose() 
+    @Type(() => Category)
     public get category(): Category {
         return this._category;
     }
@@ -14,7 +17,7 @@ export class Todo {
         this._category = value;
     }
 
-    public get id(): number {
+    @Expose() public get id(): number {
         return this._id;
     }
 
@@ -22,7 +25,7 @@ export class Todo {
         this._id = value;
     }
 
-    public get text(): string {
+    @Expose() public get text(): string {
         return this._text;
     }
 
@@ -30,7 +33,7 @@ export class Todo {
         this._text = value;
     }
 
-    public get isCompleted(): boolean {
+    @Expose() public get isCompleted(): boolean {
         return this._isCompleted;
     }
     

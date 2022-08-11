@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { QueryRef } from 'apollo-angular';
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { map, Subscription } from 'rxjs';
 import { Category } from './models/category';
 import { Todo } from './models/todo';
@@ -31,7 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.categoriesQuery = this.getCategories.watch();
     this.querySubscription = this.categoriesQuery.valueChanges
       .pipe(
-        map(response => plainToClass(GetCategoriesResponse, response.data)),
+        map(response => plainToInstance(GetCategoriesResponse, response.data, { excludeExtraneousValues: true })),
         map(data => data.categories) 
       )
       .subscribe(categories => {
@@ -69,7 +69,7 @@ export class AppComponent implements OnInit, OnDestroy {
         text: text
       }
     }).pipe(
-      map(response => plainToClass(CreateTodoResponse, response.data)),
+      map(response => plainToInstance(CreateTodoResponse, response.data, { excludeExtraneousValues: true })),
       map(data => data.createTodo)
     ).subscribe(todo => {
       let categoryIndex = this.data.findIndex((category: Category) => category.id === todo.category.id);
@@ -91,7 +91,7 @@ export class AppComponent implements OnInit, OnDestroy {
         status: !todo.isCompleted
       }
     }).pipe(
-      map(response => plainToClass(CheckTodoResponse, response.data)),
+      map(response => plainToInstance(CheckTodoResponse, response.data, { excludeExtraneousValues: true })),
       map(data => data.checkTodo)
     ).subscribe(todo => {
       let categoryIndex = this.data.findIndex((category: Category) => category.id === todo.category.id);

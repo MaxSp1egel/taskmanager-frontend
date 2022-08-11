@@ -1,3 +1,4 @@
+import { Expose, Type } from "class-transformer";
 import { Todo } from "./todo";
 
 export class Category {
@@ -5,7 +6,7 @@ export class Category {
     private _title!: string;
     private _todos!: Todo[];
 
-    public get id(): number {
+    @Expose() public get id(): number {
         return this._id;
     }
 
@@ -13,7 +14,7 @@ export class Category {
         this._id = value;
     }
 
-    public get title(): string {
+    @Expose() public get title(): string {
         return this._title;
     }
     
@@ -21,6 +22,8 @@ export class Category {
         this._title = value;
     }
 
+    @Expose() 
+    @Type(() => Todo)
     public get todos(): Todo[] {
         return this._todos;
     }
