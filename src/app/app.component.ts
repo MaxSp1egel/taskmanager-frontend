@@ -1,9 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogComponent } from './components/dialog/dialog.component';
-import { QueryRef } from 'apollo-angular';
 import { plainToInstance } from 'class-transformer';
-import { map, Subscription } from 'rxjs';
+import { map } from 'rxjs';
 import { Category } from './models/category';
 import { Todo } from './models/todo';
 import { CheckTodo, CheckTodoResponse, CreateTodo, CreateTodoResponse, GetCategories, GetCategoriesResponse } from './services/graphql.service';
@@ -13,12 +12,9 @@ import { CheckTodo, CheckTodoResponse, CreateTodo, CreateTodoResponse, GetCatego
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
 
   data: Category[] = [];
-
-  private categoriesQuery?: QueryRef<any>; 
-  private querySubscription?: Subscription;
 
   constructor(
     private dialog: MatDialog,
@@ -28,21 +24,12 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.categoriesQuery = this.getCategories.watch();
-    this.querySubscription = this.categoriesQuery.valueChanges
-      .pipe(
+    this.getCategories.fetch().pipe(
         map(response => plainToInstance(GetCategoriesResponse, response.data, { excludeExtraneousValues: true })),
         map(data => data.categories) 
-      )
-      .subscribe(categories => {
+      ).subscribe(categories => {
         this.data = categories;
       });
-  }
-
-  ngOnDestroy(): void {
-    if (this.querySubscription) {
-      this.querySubscription.unsubscribe();
-    }
   }
 
   openDialog(): void {
