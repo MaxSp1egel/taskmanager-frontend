@@ -7,7 +7,6 @@ export class Todo {
     private _text!: string;
     private _isCompleted!: boolean;
 
-    @Expose() 
     @Type(() => Category)
     public get category(): Category {
         return this._category;
@@ -17,7 +16,7 @@ export class Todo {
         this._category = value;
     }
 
-    @Expose() public get id(): number {
+    public get id(): number {
         return this._id;
     }
 
@@ -25,7 +24,7 @@ export class Todo {
         this._id = value;
     }
 
-    @Expose() public get text(): string {
+    public get text(): string {
         return this._text;
     }
 
@@ -33,7 +32,7 @@ export class Todo {
         this._text = value;
     }
 
-    @Expose() public get isCompleted(): boolean {
+    public get isCompleted(): boolean {
         return this._isCompleted;
     }
     

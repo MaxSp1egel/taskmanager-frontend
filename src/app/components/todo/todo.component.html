@@ -1,0 +1,4 @@
+<mat-list-option [selected]="todo.isCompleted" checkboxPosition="before" (click)="check(todo)">
+    {{ todo.text }}
+    <mat-divider *ngIf="!last"></mat-divider>
+</mat-list-option>

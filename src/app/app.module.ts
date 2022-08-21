@@ -6,6 +6,9 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { CategoryComponent } from './components/category/category.component';
+import { TodoComponent } from './components/todo/todo.component';
+import { HeaderComponent } from './components/header/header.component';
 
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -24,7 +27,10 @@ import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
-    DialogComponent
+    DialogComponent,
+    CategoryComponent,
+    TodoComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,

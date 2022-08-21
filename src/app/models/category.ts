@@ -6,7 +6,7 @@ export class Category {
     private _title!: string;
     private _todos!: Todo[];
 
-    @Expose() public get id(): number {
+    public get id(): number {
         return this._id;
     }
 
@@ -14,7 +14,7 @@ export class Category {
         this._id = value;
     }
 
-    @Expose() public get title(): string {
+    public get title(): string {
         return this._title;
     }
     
@@ -22,7 +22,6 @@ export class Category {
         this._title = value;
     }
 
-    @Expose() 
     @Type(() => Todo)
     public get todos(): Todo[] {
         return this._todos;

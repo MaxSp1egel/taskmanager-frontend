@@ -1,0 +1,12 @@
+.mat-grid-tile-header {
+    background-color: white; 
+    color: black; 
+    font-weight: bold;
+}
+
+.mat-selection-list {
+    width: 100%; 
+    position: absolute; 
+    top: 40px;
+    left: 0px;
+}

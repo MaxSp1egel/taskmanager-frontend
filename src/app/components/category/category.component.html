@@ -1,0 +1,6 @@
+<mat-grid-tile-header>
+    {{ category.title }}
+</mat-grid-tile-header>
+<mat-selection-list>
+    <app-todo *ngFor="let todo of category.todos; trackBy: trackByFn; let last = last" [todo]="todo" [last]="last"></app-todo>
+</mat-selection-list>
